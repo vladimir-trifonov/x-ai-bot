@@ -84,10 +84,14 @@ TWITTER_ACCESS_SECRET=your_twitter_access_secret
 USER_HANDLE=your_twitter_handle
 
 # News API Key
-NEWSAPI_KEY=your_newsapi_key
+NEWS_API_KEY=your_newsapi_key
 
 # OpenAI API Key (if using OpenAI for content generation)
 OPENAI_API_KEY=your_openai_api_key
+
+MAX_POSTS_PER_DAY=max_posts_per_day
+REQUEST_INTERVAL=request_interval
+POST_INTERVAL = post_interval
 
 # Email Credentials (for error notifications, optional)
 FROM_EMAIL=your_email@example.com
