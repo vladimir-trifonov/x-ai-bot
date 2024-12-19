@@ -31,7 +31,7 @@ logging.basicConfig(
 )
 
 REQUEST_INTERVAL = int(os.getenv("REQUEST_INTERVAL", "1200"))         # 20 minutes
-POST_INTERVAL = int(os.getenv("POST_INTERVAL", "3600"))             # 1 hour
+POST_INTERVAL = int(os.getenv("POST_INTERVAL", "3600"))               # 1 hour
 MAX_POSTS_PER_DAY = int(os.getenv("MAX_POSTS_PER_DAY", "12"))         # Default 12 if not set
 
 NEWS_API_KEY = os.getenv("NEWS_API_KEY")
@@ -94,13 +94,13 @@ def can_post():
 
 # Define the tasks we want to rotate through
 TASKS = [
-    process_pending_tweets,
     tweet_latest_crypto_news,
     tweet_about_crypto_trend,
     retweet_popular_crypto_post,
     promote_account,
     reply_to_cached_mentions,
-    proactive_engagement_if_no_mentions
+    proactive_engagement_if_no_mentions,
+    process_pending_tweets
 ]
 
 def get_next_task_index():

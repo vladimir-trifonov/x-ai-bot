@@ -99,17 +99,18 @@ def tweet_latest_crypto_news():
         logging.info("Daily limit reached, skipping tweet_latest_crypto_news.")
         return
     news_articles = fetch_latest_crypto_news_cached(api_key=NEWS_API_KEY, user_handle=USER_HANDLE, page_size=5)
-    for article in news_articles:
-        tweet_text = generate_tweet_from_news(article)
-        if is_duplicate_tweet(tweet_text):
-            logging.info("Duplicate tweet detected. Skipping this article.")
-            continue
-        post_id = post_tweet_with_media(tweet_text)
-        if post_id:
-            add_posted_tweet(tweet_text)
-            increment_post_count()
-            logging.info(f"Successfully tweeted: {tweet_text}")
-            break
+    if not news_articles:
+        logging.debug("No new articles to tweet.")
+        return
+    article = news_articles[0]
+    tweet_text = generate_tweet_from_news(article)
+    if is_duplicate_tweet(tweet_text):
+        logging.info("Duplicate tweet detected. Skipping this article.")
+    post_id = post_tweet_with_media(tweet_text)
+    if post_id:
+        add_posted_tweet(tweet_text)
+        increment_post_count()
+        logging.info(f"Successfully tweeted: {tweet_text}")
 
 def upload_media(image_data):
     try:
@@ -200,12 +201,12 @@ def cached_or_openai_trends():
     if not trends:
         prompt = "List 5 currently trending crypto topics as a JSON array of strings."
         content = ask_openai(prompt, max_tokens=100)
-        logging.debug(f"OpenAI response: {content}")
         try:
-            # Assuming the content is already a JSON string that can be directly evaluated
-            if isinstance(content, list):
-                set_json_state("cached_trends", content)
-                return content
+            content=content.strip("`").split("\n", 1)[-1]
+            parsed = json.loads(content)
+            if isinstance(parsed, list):
+                set_json_state("cached_trends", parsed)
+                return parsed
             else:
                 logging.error("OpenAI response is not a list.")
                 return ["#Crypto", "#Bitcoin", "#Ethereum", "#NFTs", "#DeFi"]
@@ -247,6 +248,7 @@ def fetch_viral_coins():
     prompt = "List 5 fictional viral crypto coin names as a JSON array of strings."
     content = ask_openai(prompt, max_tokens=50)
     try:
+        content=content.strip("`").split("\n", 1)[-1]
         parsed = json.loads(content)
         if isinstance(parsed, list):
             set_json_state("cached_viral_coins", parsed)
@@ -329,7 +331,7 @@ def proactive_engagement_if_no_mentions():
         return
     logging.info("Performing proactive engagement.")
     infl = cached_influencers()
-    influencer_name = random.choice(infl) if infl else "@CryptoExpert"
+    influencer_name = random.choice(infl) if infl else USER_HANDLE
 
     coins = cached_viral_coins()
     if not coins:
