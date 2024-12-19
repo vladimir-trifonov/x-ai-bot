@@ -1,0 +1,7 @@
+tweepy==4.14.0
+openai==1.58.1
+cachetools==5.3.1
+tenacity==9.0.0
+ratelimit==2.2.1
+python-dotenv
+requests
