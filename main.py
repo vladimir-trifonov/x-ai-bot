@@ -6,7 +6,7 @@ from bot import (
     reply_to_cached_mentions,
     tweet_about_crypto_trend,
     promote_account,
-    retweet_popular_crypto_post,
+    # retweet_popular_crypto_post,
     proactive_engagement_if_no_mentions,
     get_my_user_id,
     tweet_latest_crypto_news,
@@ -96,7 +96,7 @@ def can_post():
 TASKS = [
     tweet_latest_crypto_news,
     tweet_about_crypto_trend,
-    retweet_popular_crypto_post,
+    # retweet_popular_crypto_post,
     promote_account,
     reply_to_cached_mentions,
     proactive_engagement_if_no_mentions,

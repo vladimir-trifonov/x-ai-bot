@@ -54,7 +54,7 @@ auth = tweepy.OAuth1UserHandler(
     TWITTER_ACCESS_TOKEN,
     TWITTER_ACCESS_SECRET
 )
-api = tweepy.API(auth, wait_on_rate_limit=False, timeout=10)
+api = tweepy.API(auth, wait_on_rate_limit=True, timeout=10)
 
 def get_my_user_id():
     user_id = get_state("user_id")
