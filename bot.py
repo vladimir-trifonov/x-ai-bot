@@ -104,6 +104,8 @@ def tweet_latest_crypto_news():
         return
     article = news_articles[0]
     tweet_text = generate_tweet_from_news(article)
+    if not tweet_text:
+        return
     if is_duplicate_tweet(tweet_text):
         logging.info("Duplicate tweet detected. Skipping this article.")
     post_id = post_tweet_with_media(tweet_text)
@@ -320,6 +322,8 @@ def reply_to_cached_mentions():
     set_json_state("cached_mentions", mentions)
     prompt = f"Reply to this crypto tweet: '{mention_text}'. Add value and positivity."
     reply_text = generate_text(prompt, style="reply")
+    if not reply_text:
+        return
     post_id = post_tweet_with_media(reply_text)
     if post_id:
         increment_post_count()  # Count replies as posts too if desired
@@ -341,6 +345,8 @@ def proactive_engagement_if_no_mentions():
 
     prompt = f"No mentions lately. Tweet about {meme_coin} and give a shoutout to {influencer_name}."
     text = generate_text(prompt, style="tweet")
+    if not text:
+        return
     image_url = generate_image(f"A cryptocurrency themed image related to {meme_coin} and {influencer_name}")
     post_id = post_tweet_with_media(text, image_url=image_url)
     if post_id:
@@ -378,6 +384,8 @@ def tweet_about_crypto_trend():
 
     prompt = f"Write a short, insightful tweet about '{crypto_topic}'. Incorporate the following verified information: '{verified_info}'."
     tweet_text = generate_text(prompt, style="tweet")
+    if not tweet_text:
+        return
     image_url = generate_image(f"An illustration representing {crypto_topic}")
     post_id = post_tweet_with_media(tweet_text, image_url=image_url)
     if post_id:
@@ -404,6 +412,8 @@ def promote_account():
                   f"{news_snippet} Make them excited to follow.")
 
     promo_text = generate_text(prompt, style="promo", max_tokens=100)
+    if not promo_text:
+        return
     image_url = generate_image("A crypto marketing themed illustration")
     post_id = post_tweet_with_media(promo_text, image_url)
     if post_id:
@@ -414,6 +424,8 @@ def retweet_popular_crypto_post():
         logging.info("Daily limit reached, skipping retweet_popular_crypto_post.")
         return
     text = generate_text("Write a short commentary on a popular crypto tweet you saw recently", style="tweet")
+    if not text:
+        return
     post_id = post_tweet_with_media(text)
     if post_id:
         increment_post_count()

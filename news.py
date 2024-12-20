@@ -44,6 +44,7 @@ def fetch_and_process_crypto_news(api_key, user_handle, query="cryptocurrency", 
             return []
 
         articles = data.get("articles", [])
+        logging.debug(f"Fetched {len(parsed_articles)} news articles: {articles}.");
         parsed_articles = process_articles(articles, user_handle)
         return parsed_articles
 
