@@ -128,24 +128,24 @@ def upload_media(image_data):
         logging.error(f"Error uploading media: {e}")
     return None
 
-def is_valid_tweet(text: str) -> bool:
+def is_invalid_tweet(text: str) -> bool:
     # Regular expression to find URLs
     url_pattern = r"http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+"
     urls = re.findall(url_pattern, text)
     
     if not urls:
         # No URLs found, so it's valid
-        return True
+        return False
 
     for url in urls:
         try:
             response = requests.head(url, timeout=5)  # Use HEAD request for efficiency
             if response.status_code != 200:
-                return False  # Invalid if any URL doesn't return 200
+                return True  # Invalid if any URL doesn't return 200
         except requests.RequestException:
-            return False  # Invalid if any request fails
+            return True  # Invalid if any request fails
     
-    return True  # Valid if all URLs return 200
+    return False  # Valid if all URLs return 200
     
 @sleep_and_retry
 @limits(calls=17, period=ONE_HOUR * 24)  # 17 calls per 24 hours
@@ -157,7 +157,7 @@ def post_tweet_with_media(text: str, image_url=None):
     if is_duplicate_tweet(text):
         logging.warning("Duplicate tweet detected. Skipping posting.")
         return None
-    if is_valid_tweet(text):
+    if is_invalid_tweet(text):
         logging.warning("Invalid tweet detected. Skipping posting.")
         return None
 
