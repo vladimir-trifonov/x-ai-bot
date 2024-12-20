@@ -313,7 +313,7 @@ def perform_single_request(user_id):
         elif rtype == "influencers":
             res = client.search_recent_tweets(
                 query="crypto influencer -is:retweet",
-                max_results=5,
+                max_results=10,
                 expansions=["author_id"],
                 user_fields=["username"]
             )
